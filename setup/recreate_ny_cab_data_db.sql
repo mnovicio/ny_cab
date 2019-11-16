@@ -1,0 +1,3 @@
+
+DROP DATABASE IF EXISTS ny_cab_data;
+CREATE DATABASE ny_cab_data;
