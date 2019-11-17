@@ -1,0 +1,200 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "NY Cab service",
+    "version": "1.0",
+    "contact": {
+      "name": "NY Cab Service project",
+      "url": "https://github.com/mnovicio/ny_cab",
+      "email": "michael.angelo.novicio@gmail.com"
+    }
+  },
+  "schemes": [
+    "http"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/cabtrips": {
+      "post": {
+        "operationId": "GetAllCabTripCountPerDayV1",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/rpcGetAllCabTripsResponseV1"
+            }
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {
+              "format": "string"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/rpcGetAllCabTripsRequestV1"
+            }
+          }
+        ],
+        "tags": [
+          "NYCabService"
+        ]
+      }
+    },
+    "/v1/cabtrips/bypickupdate": {
+      "post": {
+        "operationId": "GetTripCountsForCabIDsV1",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/rpcGetTripCountsForCabIDsResponseV1"
+            }
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {
+              "format": "string"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/rpcGetTripCountsForCabIDsRequestV1"
+            }
+          }
+        ],
+        "tags": [
+          "NYCabService"
+        ]
+      }
+    },
+    "/v1/cabtrips/clearcache": {
+      "get": {
+        "operationId": "ClearCacheV1",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/rpcClearCacheResponseV1"
+            }
+          },
+          "404": {
+            "description": "Returned when the resource does not exist.",
+            "schema": {
+              "format": "string"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "clear_cache",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "format": "boolean"
+          }
+        ],
+        "tags": [
+          "NYCabService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "objectsCabTripsPerDay": {
+      "type": "object",
+      "properties": {
+        "cab_trips": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/objectsTripsPerDay"
+          }
+        }
+      },
+      "title": "CabTripsPerDay is a dictionary of the total number of trips a particular cab has made in a given day\nUses the medalion(cab id) as the key"
+    },
+    "objectsTripsPerDay": {
+      "type": "object",
+      "properties": {
+        "trips_per_day": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "title": "TripsPerDay encapsulates the total number of trips in a given day\nUses date in format 'YYY-MM-DD' as the key"
+    },
+    "rpcClearCacheResponseV1": {
+      "type": "object",
+      "properties": {
+        "cache_cleared": {
+          "type": "boolean",
+          "format": "boolean"
+        }
+      }
+    },
+    "rpcGetAllCabTripsRequestV1": {
+      "type": "object",
+      "properties": {
+        "ignore_cache": {
+          "type": "boolean",
+          "format": "boolean"
+        }
+      }
+    },
+    "rpcGetAllCabTripsResponseV1": {
+      "type": "object",
+      "properties": {
+        "cab_trips_per_day": {
+          "$ref": "#/definitions/objectsCabTripsPerDay"
+        }
+      }
+    },
+    "rpcGetTripCountsForCabIDsRequestV1": {
+      "type": "object",
+      "properties": {
+        "cab_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "ignore_cache": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "pickup_date": {
+          "type": "string"
+        }
+      }
+    },
+    "rpcGetTripCountsForCabIDsResponseV1": {
+      "type": "object",
+      "properties": {
+        "cab_trips_per_day": {
+          "$ref": "#/definitions/objectsCabTripsPerDay"
+        },
+        "error": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

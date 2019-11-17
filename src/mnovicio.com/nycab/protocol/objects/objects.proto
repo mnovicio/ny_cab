@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package nycab.data.objects;
+option go_package = "mnovicio.com/nycab/protocol/objects";
+
+// TripsPerDay encapsulates the total number of trips in a given day
+// Uses date in format 'YYY-MM-DD' as the key
+message TripsPerDay {
+    map<string, uint32> trips_per_day = 1;
+}
+
+// CabTripsPerDay is a dictionary of the total number of trips a particular cab has made in a given day
+// Uses the medalion(cab id) as the key
+message CabTripsPerDay {
+    map<string, TripsPerDay> cab_trips = 1;
+}

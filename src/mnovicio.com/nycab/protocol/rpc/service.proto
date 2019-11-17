@@ -1,0 +1,84 @@
+syntax = "proto3";
+
+package nycab.rpc;
+option go_package = "mnovicio.com/nycab/protocol/rpc";
+
+import "google/api/annotations.proto";
+// import "google/protobuf/timestamp.proto";
+import "protoc-gen-swagger/options/annotations.proto";
+import "nycab/protocol/objects/objects.proto";
+
+option (grpc.gateway.protoc_gen_swagger.options.openapiv2_swagger) = {
+	info: {
+		title: "NY Cab service";
+		version: "1.0";
+		contact: {
+			name: "NY Cab Service project";
+			url: "https://github.com/mnovicio/ny_cab";
+			email: "michael.angelo.novicio@gmail.com";
+        };
+    };
+    schemes: HTTP;
+    consumes: "application/json";
+    produces: "application/json";
+    responses: {
+		key: "404";
+		value: {
+			description: "Returned when the resource does not exist.";
+			schema: {
+				json_schema: {
+					type: STRING;
+				}
+			}
+		}
+	}
+};
+
+message GetAllCabTripsRequestV1 {
+	bool ignore_cache = 1;
+}
+
+message GetAllCabTripsResponseV1 {
+    nycab.data.objects.CabTripsPerDay cab_trips_per_day = 1;
+}
+
+message ClearCacheRequestV1 {
+	bool clear_cache = 1;
+}
+
+message ClearCacheResponseV1 {
+	bool cache_cleared = 1;
+}
+
+message GetTripCountsForCabIDsRequestV1 {
+	repeated string cab_ids = 1;
+	bool ignore_cache = 2;
+	string pickup_date = 3; // format 'YYYY-MM-DD'
+}
+
+message GetTripCountsForCabIDsResponseV1 {
+	nycab.data.objects.CabTripsPerDay cab_trips_per_day = 1;
+	string error = 2; //optional, returns non-empty string for handled error case (e.g. wrong date format)
+}
+
+service NYCabService {
+    rpc GetAllCabTripCountPerDayV1 (GetAllCabTripsRequestV1) returns (GetAllCabTripsResponseV1) {
+        option (google.api.http) = {
+			post : "/v1/cabtrips"
+			body : "*"
+        };
+	}
+	
+	rpc ClearCacheV1 (ClearCacheRequestV1) returns (ClearCacheResponseV1) {
+		option (google.api.http) = {
+			get : "/v1/cabtrips/clearcache"
+		};
+	}
+
+	rpc GetTripCountsForCabIDsV1 (GetTripCountsForCabIDsRequestV1) returns (GetTripCountsForCabIDsResponseV1) {
+		option (google.api.http) = {
+			post : "/v1/cabtrips/bypickupdate"
+			body : "*"
+		};
+	}
+}
