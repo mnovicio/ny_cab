@@ -1,3 +1,14 @@
+
+Cab Data Researcher is a company that provides insights on the open data about NY cab trips
+
+Cab trips in NY are publicly available as CSV downloadable files. In order to make it more useful, we want to wrap the data in a public API.
+
+Backend is implemented in Go using grpc and grpc-gateway to provide REST endpoints.
+
+Frontend CLI is also implemented in GO using Cobra.
+
+Enjoy!
+
 ---------------------------------------
 * [Database Setup](#database-setup)
   * [Docker Setup](#docker-setup)
